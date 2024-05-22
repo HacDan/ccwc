@@ -33,15 +33,7 @@ func main() {
 			panic(err)
 		}
 	} else {
-		stdin, err := os.ReadFile(os.Args[2])
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	if len(os.Args) > 2 || len(os.Args) < 1 {
-		cmdHelp(stdin)
-		os.Exit(1)
+		stdin, _ = os.ReadFile(os.Args[2]) //TODO: Handle this better. Scoping issue or something
 	}
 
 	var byteFlag = flag.Bool("c", false, commands["bytes"].description)
@@ -54,27 +46,27 @@ func main() {
 	flag.Parse()
 
 	if *helpFlag {
-		cmdHelp()
+		cmdHelp(stdin)
 		os.Exit(0)
 	}
 	if *versionFlag {
-		cmdVersion()
+		cmdVersion(stdin)
 		os.Exit(0)
 	}
 	if *byteFlag {
-		cmdBytes()
+		cmdBytes(stdin)
 		os.Exit(0)
 	}
 	if *charFlag {
-		cmdChars()
+		cmdChars(stdin)
 		os.Exit(0)
 	}
 	if *lineFlag {
-		cmdLines()
+		cmdLines(stdin)
 		os.Exit(0)
 	}
 	if *wordFlag {
-		cmdWords()
+		cmdWords(stdin)
 		os.Exit(0)
 	}
 

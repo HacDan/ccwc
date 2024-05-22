@@ -1,6 +1,6 @@
 package main
 
-func cmdBytes() string {
+func cmdBytes(b []byte) string {
 	results := ""
 
 	return results

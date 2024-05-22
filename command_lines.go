@@ -1,6 +1,6 @@
 package main
 
-func cmdLines() string {
+func cmdLines(b []byte) string {
 	results := ""
 
 	return results

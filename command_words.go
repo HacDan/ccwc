@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func cmdWords(b *[]byte) string {
-	s := string(*b)
+func cmdWords(b []byte) string {
+	s := string(b)
 	return strconv.Itoa(len(strings.Fields(s)))
 }

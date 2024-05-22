@@ -1,6 +1,6 @@
 package main
 
-func cmdChars() string {
+func cmdChars(b []byte) string {
 	results := ""
 
 	return results
