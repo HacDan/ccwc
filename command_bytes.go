@@ -1,7 +1,8 @@
 package main
 
-func cmdBytes(b []byte) string {
-	results := ""
+import "strconv"
 
-	return results
+func cmdBytes(b []byte) string {
+	bytes := len(b)
+	return strconv.Itoa(bytes)
 }

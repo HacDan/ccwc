@@ -1,7 +1,12 @@
 package main
 
-func cmdLines(b []byte) string {
-	results := ""
+import (
+	"bytes"
+	"strconv"
+)
 
-	return results
+func cmdLines(b []byte) string {
+	lineSep := []byte{'\n'}
+	total := bytes.Count(b, lineSep)
+	return strconv.Itoa(total)
 }

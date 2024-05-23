@@ -2,11 +2,9 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 )
 
 type Command struct {
@@ -18,22 +16,27 @@ type Command struct {
 func main() {
 	var stdin []byte
 	commands := getCommands()
-	if len(os.Args) > 2 || len(os.Args) < 1 {
-		cmdHelp(stdin)
+	if len(os.Args) > 3 || len(os.Args) < 1 {
+		result := cmdHelp(stdin)
+		printOutput(result, "")
 		os.Exit(1)
 	}
+	fileName := ""
 	// check if there is somethinig to read on STDIN
 	stat, _ := os.Stdin.Stat()
+
 	if (stat.Mode() & os.ModeCharDevice) == 0 {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
 			stdin = append(stdin, scanner.Bytes()...)
+			stdin = append(stdin, '\n')
 		}
 		if err := scanner.Err(); err != nil {
 			panic(err)
 		}
 	} else {
 		stdin, _ = os.ReadFile(os.Args[2]) //TODO: Handle this better. Scoping issue or something
+		fileName = os.Args[2]
 	}
 
 	var byteFlag = flag.Bool("c", false, commands["bytes"].description)
@@ -46,43 +49,38 @@ func main() {
 	flag.Parse()
 
 	if *helpFlag {
-		cmdHelp(stdin)
+		_ = cmdHelp(stdin)
 		os.Exit(0)
 	}
 	if *versionFlag {
-		cmdVersion(stdin)
+		_ = cmdVersion(stdin)
 		os.Exit(0)
 	}
 	if *byteFlag {
-		cmdBytes(stdin)
+		size := cmdBytes(stdin)
+		printOutput(size, fileName)
 		os.Exit(0)
 	}
 	if *charFlag {
-		cmdChars(stdin)
+		size := cmdChars(stdin)
+		printOutput(size, fileName)
 		os.Exit(0)
 	}
 	if *lineFlag {
-		cmdLines(stdin)
+		size := cmdLines(stdin)
+		printOutput(size, fileName)
 		os.Exit(0)
 	}
 	if *wordFlag {
-		cmdWords(stdin)
+		size := cmdWords(stdin)
+		printOutput(size, fileName)
 		os.Exit(0)
 	}
 
-	lineSep := []byte{'\n'}
-
-	wordCount := cmdWordCount(&testFile)
-	byteCount := len(testFile)
-	lineCount := bytes.Count(testFile, lineSep)
-
-	fmt.Println("Wordcount: ", wordCount)
-	fmt.Println("Bytecount: ", byteCount)
-	fmt.Println("Linecount: ", lineCount)
 }
 
-func cmdWordCount(f *[]byte) int {
-	return len(strings.Fields(string(*f)))
+func printOutput(size string, fileName string) {
+	fmt.Println(size, " ", fileName)
 }
 
 func getCommands() map[string]Command {
